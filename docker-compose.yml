@@ -1,0 +1,26 @@
+version: '3'
+services:
+  web:
+    build: .
+    networks:
+      - app
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html:cached
+    container_name: dbhttpweb
+  mysql:
+    image: "mysql:5.7"
+    networks:
+      - app
+    volumes:
+      - .:/docker-entrypoint-initdb.d
+    command:
+      --disable-partition-engine-check
+      --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: foo
+    restart: always
+networks:
+  app:
